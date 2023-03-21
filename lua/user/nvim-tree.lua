@@ -8,12 +8,31 @@ if not config_status_ok then
   return
 end
 
+-- Open For Directories And Change Neovim's Directory
+local function open_nvim_tree(data)
+  -- buffer is a directory
+  local directory = vim.fn.isdirectory(data.file) == 1
+
+  if not directory then
+    return
+  end
+
+  -- change to the directory
+  vim.cmd.cd(data.file)
+
+  -- open the tree
+  require("nvim-tree.api").tree.open()
+end
+
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+
 local tree_cb = nvim_tree_config.nvim_tree_callback
 
 nvim_tree.setup {
   update_focused_file = {
     enable = true,
     update_cwd = true,
+    ignore_list = { "toggleterm", "lazygit", "term" },
   },
   renderer = {
     root_folder_modifier = ":t",
@@ -59,8 +78,8 @@ nvim_tree.setup {
     mappings = {
       list = {
         { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" },
-        { key = "h", cb = tree_cb "close_node" },
-        { key = "v", cb = tree_cb "vsplit" },
+        { key = "h",                  cb = tree_cb "close_node" },
+        { key = "v",                  cb = tree_cb "vsplit" },
       },
     },
   },
