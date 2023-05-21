@@ -15,33 +15,33 @@ local check_backspace = function()
   return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
 end
 
---   פּ ﯟ   some other good icons
+-- 󰃐 󰆩 󰙅 󰛡  󰅲 some other good icons
 local kind_icons = {
-  Text = "",
+  Text = "󰉿",
   Method = "m",
-  Function = "",
+  Function = "󰊕",
   Constructor = "",
   Field = "",
-  Variable = "",
-  Class = "",
+  Variable = "󰆧",
+  Class = "󰌗",
   Interface = "",
   Module = "",
   Property = "",
   Unit = "",
-  Value = "",
+  Value = "󰎠",
   Enum = "",
-  Keyword = "",
+  Keyword = "󰌋",
   Snippet = "",
-  Color = "",
-  File = "",
+  Color = "󰏘",
+  File = "󰈙",
   Reference = "",
-  Folder = "",
+  Folder = "󰉋",
   EnumMember = "",
-  Constant = "",
+  Constant = "󰇽",
   Struct = "",
   Event = "",
-  Operator = "",
-  TypeParameter = "",
+  Operator = "󰆕",
+  TypeParameter = "󰊄",
 }
 -- find more here: https://www.nerdfonts.com/cheat-sheet
 
@@ -53,7 +53,7 @@ cmp.setup {
   },
   mapping = {
     ["<C-k>"] = cmp.mapping.select_prev_item(),
-		["<C-j>"] = cmp.mapping.select_next_item(),
+    ["<C-j>"] = cmp.mapping.select_next_item(),
     ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
     ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
     ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
@@ -113,13 +113,23 @@ cmp.setup {
     { name = "nvim_lsp" },
     { name = "luasnip" },
     { name = "buffer" },
-    { name = "path" },
+    {
+      name = "path",
+      option = {
+        get_cwd = function()
+          return vim.loop.cwd()
+        end,
+      },
+    },
   },
   confirm_opts = {
     behavior = cmp.ConfirmBehavior.Replace,
     select = false,
   },
   window = {
+    completion = {
+      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    },
     documentation = {
       border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
     },

@@ -68,3 +68,17 @@ local python = Terminal:new({ cmd = "python", hidden = true })
 function _PYTHON_TOGGLE()
 	python:toggle()
 end
+
+function _RUN_LANGUAGE()
+  local filetype = vim.bo.filetype
+  if filetype == "python" then
+    vim.cmd("TermExec cmd='python %'")
+  elseif filetype == "rust" then
+    vim.cmd("TermExec cmd='cargo run'")
+  elseif filetype == "c" then
+    vim.cmd("TermExec cmd='gcc % -o out && ./out'")
+  else
+    print("No Execute cmd for language: " .. filetype)
+  end
+end
+

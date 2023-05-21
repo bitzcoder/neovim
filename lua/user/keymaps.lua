@@ -19,11 +19,28 @@ vim.g.maplocalleader = " "
 --   command_mode = "c",
 
 -- Normal --
+-- Change the keybinding for incrementing numbers
+keymap('n', '<C-i>', '<C-a>', opts)
+-- Select all texts
+keymap('n', '<C-a>', 'ggVG', opts)
+
 -- Better window navigation
 keymap("n", "<C-h>", "<C-w>h", opts)
 keymap("n", "<C-j>", "<C-w>j", opts)
 keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
+
+-- Go the different buffers
+keymap("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
+keymap("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
+keymap("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
+keymap("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
+keymap("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
+keymap("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
+keymap("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
+keymap("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
+keymap("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
+keymap("n", "<leader>0", ":BufferLineGoToBuffer -1<CR>", opts)
 
 -- Resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
@@ -32,9 +49,10 @@ keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
 -- Navigate buffers
-keymap("n", "<tab>", ":bnext<CR>", opts)
-keymap("n", "<S-l>", ":bnext<CR>", opts)
-keymap("n", "<S-h>", ":bprevious<CR>", opts)
+keymap("n", "<tab>", ":BufferLineCycleNext<CR>", opts)
+keymap("n", "<S-tab>", ":BufferLineCyclePrev<CR>", opts)
+-- keymap("n", "<S-l>", ":bnext<CR>", opts)
+-- keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Move text up and down
 keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
@@ -59,6 +77,13 @@ keymap('n', 'N', 'Nzzzv', opts)
 
 keymap('n', '<esc><esc>', '<cmd>nohlsearch<cr>', opts)
 
+-- Deleting and Yanking lines without making a new line while pasing
+keymap('n', 'dil', "dd:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
+keymap('n', 'yil', "yy:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
+
+-- Search and Replace
+keymap('n', '<A-r>', [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], opts)
+
 -- Insert --
 -- Press jj fast to enter
 keymap("i", "jj", "<ESC>", opts)
@@ -72,6 +97,7 @@ keymap("v", ">", ">gv", opts)
 keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 keymap("v", "<A-k>", ":m .-2<CR>==", opts)
 keymap("v", "p", '"_dP', opts)
+
 -- Visual Block --
 -- Move text up and down
 keymap("x", "J", ":move '>+1<CR>gv-gv", opts)

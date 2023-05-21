@@ -55,9 +55,9 @@ null_ls.setup({
   border = "rounded",
   sources = {
     formatting.prettier.with({ extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" } }),
-    formatting.black.with({ extra_args = { "--fast" } }),
+    formatting.black.with({ extra_args = { "--fast", "--line-length=300", "--skip-string-normalization" } }),
     -- formatting.stylua,
-    -- diagnostics.flake8
+    -- diagnostics.cspell.with({ filetypes = { "markdown", "txt", "text" } }),
   },
   -- Format on save
   on_attach = function(client, bufnr)

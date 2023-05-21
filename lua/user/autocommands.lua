@@ -1,18 +1,18 @@
 -- Enable spellcheck on gitcommit and markdown
 vim.api.nvim_create_autocmd({ 'FileType' }, {
-    pattern = { 'gitcommit', 'markdown' },
-    callback = function()
-        vim.opt_local.wrap = true
-        vim.opt_local.spell = true
-    end,
+  pattern = { 'gitcommit', 'markdown' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
 })
 
 -- Strip trailing spaces before write
 vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-    pattern = { '*' },
-    callback = function()
-        vim.cmd([[ %s/\s\+$//e ]])
-    end,
+  pattern = { '*' },
+  callback = function()
+    vim.cmd([[ %s/\s\+$//e ]])
+  end,
 })
 
 vim.cmd([[
@@ -73,11 +73,16 @@ vim.cmd([[
     autocmd User AlphaReady set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
   augroup end
 
-  " Autoformat
-  " augroup _lsp
+  " " Open folds
+  " autocmd BufEnter * normal zR
+
+  " " This doesn't work with async = true
+  " augroup AutoFormat
   "   autocmd!
-  "   autocmd BufWritePre * lua vim.lsp.buf.format{async=true}
-  " augroup end
+  "   autocmd BufWritePre * lua vim.lsp.buf.format({async=true})
+  "   autocmd BufWritePre * write
+  " augroup END
+
 
   " autocmd insertenter,insertleave * set cul!
 ]])

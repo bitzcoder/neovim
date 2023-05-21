@@ -75,9 +75,9 @@ return packer.startup(function(use)
   use("rafamadriz/friendly-snippets") -- a bunch of snippets to use
 
 	-- LSP
-	use("neovim/nvim-lspconfig") -- enable LSP
 	use("williamboman/mason.nvim") -- Esay Lsp Installer
 	use("williamboman/mason-lspconfig.nvim") -- Optional for mason.
+	use("neovim/nvim-lspconfig") -- enable LSP
 	use("jose-elias-alvarez/null-ls.nvim") -- for formatters and linters
 
 	-- Telescope

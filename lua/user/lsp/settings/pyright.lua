@@ -1,8 +1,12 @@
 return {
   settings = {
+    disableOrganizeImports = false,
     python = {
       analysis = {
-        typeCheckingMode = "off"
+        useLibraryCodeForTypes = false,
+        autoSearchPaths = false,
+        diagnosticMode = "openFilesOnly",
+        typeCheckingMode = "off",
       }
     },
   },
