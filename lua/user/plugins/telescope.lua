@@ -1,11 +1,10 @@
 return {
   'nvim-telescope/telescope.nvim',
   dependencies = { 'nvim-lua/plenary.nvim' },
-  config = function ()
+  config = function()
     local actions = require('telescope.actions')
-    require('telescope').setup{
+    require('telescope').setup {
       defaults = {
-
         prompt_prefix = " ",
         -- initial_mode = "normal",
         selection_caret = " ",

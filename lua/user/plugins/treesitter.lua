@@ -63,7 +63,8 @@ return {
           enable = true,
         },
 
-        context_commentstring = { -- For nvim-ts-context-commentstring plugin
+        context_commentstring = {
+                                  -- For nvim-ts-context-commentstring plugin
           enable = true,
           enable_autocmd = false, -- Disabled when used with Comment.nvim
         },
