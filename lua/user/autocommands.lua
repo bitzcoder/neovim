@@ -15,6 +15,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   end,
 })
 
+
 vim.cmd([[
   augroup _general_settings
     autocmd!
