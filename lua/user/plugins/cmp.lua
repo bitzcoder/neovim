@@ -1,5 +1,6 @@
 return {
 	"hrsh7th/nvim-cmp", -- Required
+	-- event = { "InsertEnter", "CmdlineEnter" },
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp", -- Required
 		"hrsh7th/cmp-buffer", --  Optional

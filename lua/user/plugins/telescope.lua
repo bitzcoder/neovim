@@ -1,9 +1,9 @@
 return {
-  'nvim-telescope/telescope.nvim',
-  dependencies = { 'nvim-lua/plenary.nvim' },
+  "nvim-telescope/telescope.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
-    local actions = require('telescope.actions')
-    require('telescope').setup {
+    local actions = require("telescope.actions")
+    require("telescope").setup({
       defaults = {
         prompt_prefix = " ",
         -- initial_mode = "normal",
@@ -91,6 +91,6 @@ return {
         -- }
         -- please take a look at the readme of the extension you want to configure
       },
-    }
-  end
+    })
+  end,
 }

@@ -77,7 +77,7 @@ M.on_attach = function(client, bufnr)
 	end
 
 	if client.name == "lua_ls" then
-		client.server_capabilities.documentFormattingProvider = true
+		client.server_capabilities.documentFormattingProvider = false
 	end
 
 	lsp_keymaps(bufnr)
@@ -89,4 +89,3 @@ M.on_attach = function(client, bufnr)
 end
 
 return M
-

@@ -1,21 +1,19 @@
 -- Enable spellcheck on gitcommit and markdown
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-  pattern = { 'gitcommit', 'markdown' },
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.spell = true
-  end,
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	pattern = { "gitcommit", "markdown" },
+	callback = function()
+		vim.opt_local.wrap = true
+		vim.opt_local.spell = true
+	end,
 })
 
 -- Strip trailing spaces before write
-vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
-  pattern = { '*' },
-  callback = function()
-    vim.cmd([[ %s/\s\+$//e ]])
-  end,
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	pattern = { "*" },
+	callback = function()
+		vim.cmd([[ %s/\s\+$//e ]])
+	end,
 })
-
-
 vim.cmd([[
   augroup _general_settings
     autocmd!

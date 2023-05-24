@@ -8,7 +8,7 @@ local keymap = vim.api.nvim_set_keymap
 --Remap space as leader key
 keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = ","
 
 -- Modes
 --   normal_mode = "n",
@@ -20,9 +20,9 @@ vim.g.maplocalleader = " "
 
 -- Normal --
 -- Change the keybinding for incrementing numbers
-keymap('n', '<C-i>', '<C-a>', opts)
+keymap("n", "<C-i>", "<C-a>", opts)
 -- Select all texts
-keymap('n', '<C-a>', 'ggVG', opts)
+keymap("n", "<C-a>", "ggVG", opts)
 
 -- Better window navigation
 keymap("n", "<C-h>", "<C-w>h", opts)
@@ -61,28 +61,28 @@ keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 -- Move to the Beginning and end of the line
 keymap("n", "H", "^", opts)
 keymap("n", "L", "$", opts)
-keymap('v', 'H', '^', opts)
-keymap('v', 'L', '$', opts)
-keymap('x', 'H', '^', opts)
-keymap('x', 'L', '$', opts)
-keymap('o', 'H', '^', opts)
-keymap('o', 'L', '$', opts)
+keymap("v", "H", "^", opts)
+keymap("v", "L", "$", opts)
+keymap("x", "H", "^", opts)
+keymap("x", "L", "$", opts)
+keymap("o", "H", "^", opts)
+keymap("o", "L", "$", opts)
 
 -- Center Cursors
-keymap('n', 'J', 'mzJ`z', opts)
-keymap('n', '<C-d>', '<C-d>zz', opts)
-keymap('n', '<C-u>', '<C-u>zz', opts)
-keymap('n', 'n', 'nzzzv', opts)
-keymap('n', 'N', 'Nzzzv', opts)
+keymap("n", "J", "mzJ`z", opts)
+keymap("n", "<C-d>", "<C-d>zz", opts)
+keymap("n", "<C-u>", "<C-u>zz", opts)
+keymap("n", "n", "nzzzv", opts)
+keymap("n", "N", "Nzzzv", opts)
 
-keymap('n', '<esc><esc>', '<cmd>nohlsearch<cr>', opts)
+keymap("n", "<esc><esc>", "<cmd>nohlsearch<cr>", opts)
 
 -- Deleting and Yanking lines without making a new line while pasing
-keymap('n', 'dil', "dd:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
-keymap('n', 'yil', "yy:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
+keymap("n", "dil", "dd:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
+keymap("n", "yil", "yy:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
 
 -- Search and Replace
-keymap('n', '<A-r>', [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], opts)
+keymap("n", "<A-r>", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], opts)
 
 -- Insert --
 -- Press jj fast to enter
