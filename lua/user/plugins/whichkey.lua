@@ -105,7 +105,7 @@ return {
 			["w"] = { "<cmd>w!<CR>", "Save" },
 			["q"] = { "<cmd>q<CR>", "Quit" },
 			["Q"] = { "<cmd>q!<CR>", "Quit!" },
-			-- ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
+			["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
 			["h"] = { "<cmd>nohlsearch<CR>", "No Highlight" },
 			["r"] = { "<cmd>Telescope oldfiles<cr>", "Recent Files" },
 			["f"] = {
