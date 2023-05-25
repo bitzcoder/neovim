@@ -18,7 +18,7 @@ vim.g.maplocalleader = ","
 --   term_mode = "t",
 --   command_mode = "c",
 
--- Normal --
+--------------------------------------------------------- Normal ------------------------------------------------
 -- Change the keybinding for incrementing numbers
 keymap("n", "<C-i>", "<C-a>", opts)
 -- Select all texts
@@ -40,7 +40,7 @@ keymap("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
 keymap("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
 keymap("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
 keymap("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
-keymap("n", "<leader>0", ":BufferLineGoToBuffer -1<CR>", opts)
+keymap("n", "<leader>0", ":BufferLineGoToBuffer -1<CR>", opts) -- Go to last buffer
 
 -- Resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
@@ -75,20 +75,22 @@ keymap("n", "<C-u>", "<C-u>zz", opts)
 keymap("n", "n", "nzzzv", opts)
 keymap("n", "N", "Nzzzv", opts)
 
-keymap("n", "<esc><esc>", "<cmd>nohlsearch<cr>", opts)
-
--- Deleting and Yanking lines without making a new line while pasing
+-- Deleting and Yanking lines without making a new line while pasting
 keymap("n", "dil", "dd:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
 keymap("n", "yil", "yy:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
 
 -- Search and Replace
 keymap("n", "<A-r>", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], opts)
 
--- Insert --
+-- Setting "gx" manually for when netrw is disabled
+keymap("n", "gx", "<cmd>!xdg-open <cfile><CR>", opts)
+
+-------------------------------------------------Insert --------------------------------------------------------
+
 -- Press jj fast to enter
 keymap("i", "jj", "<ESC>", opts)
 
--- Visual --
+------------------------------------------------- Visual --------------------------------------------------------
 -- Stay in indent mode
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
@@ -98,14 +100,14 @@ keymap("v", "<A-j>", ":m .+1<CR>==", opts)
 keymap("v", "<A-k>", ":m .-2<CR>==", opts)
 keymap("v", "p", '"_dP', opts)
 
--- Visual Block --
+-------------------------------------------------- Visual Block -----------------------------------------------------
 -- Move text up and down
 keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
 keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
 keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
--- Terminal --
+--------------------------------------------------- Terminal --------------------------------------------------------
 keymap("n", "<leader>tt", ":term<cr>", opts)
 
 -- Better terminal navigation

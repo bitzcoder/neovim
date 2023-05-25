@@ -33,12 +33,19 @@ local options = {
 	linebreak = true, -- companion to wrap, don't split words
 	scrolloff = 8, -- is one of my fav
 	sidescrolloff = 8,
+	laststatus = 3, -- Use global Statusline
 	whichwrap = "bs<>[]hl", -- which "horizontal" keys are allowed to travel to prev/next line
-	-- guifont = "monospace:h17",               -- the font used in graphical neovim applications
 	shell = "fish",
 	spell = true,
-	-- foldmethod = "expr",
-	-- foldexpr = "nvim_treesitter#foldexpr()"
+	foldlevelstart = 99, -- Set the initial fold level
+	fillchars = { -- Customize fold-related characters
+		fold = " ",
+	},
+	foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').]]
+		.. [[' ... '.trim(getline(v:foldend)).]]
+		.. [[' ('.(v:foldend-v:foldstart).' lines folded...)']],
+	-- title = true,
+	-- titlestring = "%<%t %{&modified ? '*' : ''}%( (%{expand(\"%:~:.:h\")})%)%( %a%) - nvim",
 }
 
 for k, v in pairs(options) do

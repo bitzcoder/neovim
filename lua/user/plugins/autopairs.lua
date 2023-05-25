@@ -1,5 +1,8 @@
 return {
 	"windwp/nvim-autopairs",
+	dependencies = {
+		"hrsh7th/nvim-cmp",
+	},
 	event = "VeryLazy",
 	config = function()
 		local status_ok, npairs = pcall(require, "nvim-autopairs")
