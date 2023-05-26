@@ -1,8 +1,8 @@
 return {
 	"folke/which-key.nvim",
 	config = function()
-		vim.o.timeout = true
-		vim.o.timeoutlen = 500
+		-- vim.o.timeout = true
+		-- vim.o.timeoutlen = 500
 		local setup = {
 			plugins = {
 				marks = true, -- shows a list of your marks on ' and `
