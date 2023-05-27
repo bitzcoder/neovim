@@ -32,14 +32,15 @@ return {
 		})
 
 		function _G.set_terminal_keymaps()
-			local opts = { noremap = true }
-			vim.api.nvim_buf_set_keymap(0, "t", "<esc>", [[<C-\><C-n>]], opts)
-			-- vim.api.nvim_buf_set_keymap(0, "t", "jj", [[<C-\><C-n>]], opts) --"j" key delays for timeout length in terminal mode if uncommented.
-			vim.api.nvim_buf_set_keymap(0, "t", "<C-[>", [[<C-\><C-n>]], opts)
-			vim.api.nvim_buf_set_keymap(0, "t", "<C-h>", [[<C-\><C-n><C-W>h]], opts)
-			vim.api.nvim_buf_set_keymap(0, "t", "<C-j>", [[<C-\><C-n><C-W>j]], opts)
-			vim.api.nvim_buf_set_keymap(0, "t", "<C-k>", [[<C-\><C-n><C-W>k]], opts)
-			vim.api.nvim_buf_set_keymap(0, "t", "<C-l>", [[<C-\><C-n><C-W>l]], opts)
+			local opts = { buffer = 0 }
+			vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+			vim.keymap.set("t", "<C-[>", [[<C-\><C-n>]], opts)
+			vim.keymap.set("t", "jj", [[<C-\><C-n>]], opts)
+			vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
+			vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
+			vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
+			vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
+			vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opts)
 		end
 
 		vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
@@ -48,11 +49,23 @@ return {
 		local lazygit = Terminal:new({
 			cmd = "lazygit",
 			hidden = true,
+			direction = "float",
 			float_opts = {
 				border = "double",
-				width = 140,
-				height = 30,
+				width = 100000,
+				height = 100000,
 			},
+			on_open = function(_)
+				vim.cmd("startinsert!")
+
+				-- Make "<Esc>" and "<j>" keys work properly within lazygit
+				local keymaps = vim.api.nvim_buf_get_keymap(0, "t")
+				for _, keymap in ipairs(keymaps) do
+					if keymap.lhs == "<Esc>" or keymap.lhs == "jj" then
+						vim.keymap.del("t", keymap.lhs, { buffer = 0 })
+					end
+				end
+			end,
 		})
 
 		function _LAZYGIT_TOGGLE()
