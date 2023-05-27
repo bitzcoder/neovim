@@ -36,7 +36,7 @@ return {
           ["B"] = "}",
           ["r"] = "]",
           -- Table aliases only apply for changes/deletions
-          ["q"] = { '"', "'", "`" },                -- Any quote character
+          ["q"] = { '"', "'", "`" }, -- Any quote character
           ["s"] = { ")", "]", "}", ">", "'", '"', "`" }, -- Any surrounding delimiter
         },
       },

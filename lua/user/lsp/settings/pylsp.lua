@@ -3,9 +3,9 @@ return {
     pylsp = {
       plugins = {
         pycodestyle = {
-          enabled = false
-        }
-      }
-    }
+          enabled = false,
+        },
+      },
+    },
   },
 }

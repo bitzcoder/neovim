@@ -1,14 +1,14 @@
 return {
   settings = {
-    ['rust-analyzer'] = {
+    ["rust-analyzer"] = {
       diagnostics = {
-        enable = true;
+        enable = true,
         experimental = {
           enable = false,
         },
-      }
-    }
-  }
+      },
+    },
+  },
 }
 --   ['rust-analyzer'] = {
 --             -- assist = {
