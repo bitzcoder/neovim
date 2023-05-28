@@ -5,27 +5,31 @@ if not status_cmp_ok then
   return
 end
 
+-- Set up capabilities for LSP client
 M.capabilities = vim.lsp.protocol.make_client_capabilities()
 M.capabilities.textDocument.completion.completionItem.snippetSupport = true
 M.capabilities = cmp_nvim_lsp.default_capabilities(M.capabilities)
 
+-- Configuration for LSP handlers and diagnostics
 M.setup = function()
+  -- Define signs for different diagnostic severities
   local signs = {
-
     { name = "DiagnosticSignError", text = "" },
     { name = "DiagnosticSignWarn", text = "" },
     { name = "DiagnosticSignHint", text = "󰌵" },
     { name = "DiagnosticSignInfo", text = "" },
   }
 
+  -- Define signs for each severity using Vim's sign_define function
   for _, sign in ipairs(signs) do
     vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
   end
 
+  -- Configure diagnostics display and behavior
   local config = {
-    virtual_text = false, -- disable virtual text
+    virtual_text = false, -- Disable virtual text
     signs = {
-      active = signs, -- show signs
+      active = signs, -- Show signs
     },
     update_in_insert = true,
     underline = true,
@@ -42,6 +46,7 @@ M.setup = function()
 
   vim.diagnostic.config(config)
 
+  -- Customize the appearance of hover and signature help windows
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded",
   })
@@ -54,6 +59,8 @@ end
 local function lsp_keymaps(bufnr)
   local opts = { noremap = true, silent = true }
   local keymap = vim.api.nvim_buf_set_keymap
+
+  -- Define key mappings for various LSP actions
   keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
   keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
   keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
@@ -72,6 +79,7 @@ local function lsp_keymaps(bufnr)
 end
 
 M.on_attach = function(client, bufnr)
+  -- Disable document formatting provider for specific language servers
   if client.name == "tsserver" then
     client.server_capabilities.documentFormattingProvider = false
   end
@@ -80,12 +88,36 @@ M.on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
   end
 
+  -- Auto show diagnostic floating window on CursorHold
+  vim.api.nvim_create_autocmd("CursorHold", {
+    buffer = bufnr,
+    callback = function()
+      local float_opts = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+      }
+
+      if not vim.b.diagnostics_pos then
+        vim.b.diagnostics_pos = { nil, nil }
+      end
+
+      local cursor_pos = vim.api.nvim_win_get_cursor(0)
+      if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2]) and #vim.diagnostic.get() > 0 then
+        vim.diagnostic.open_float(nil, float_opts)
+      end
+
+      vim.b.diagnostics_pos = cursor_pos
+    end,
+  })
+
+  -- Set up key mappings for LSP actions
   lsp_keymaps(bufnr)
-  local status_ok, illuminate = pcall(require, "illuminate")
-  if not status_ok then
-    return
-  end
-  illuminate.on_attach(client)
+
+  -- local status_ok, illuminate = pcall(require, "illuminate")
+  -- if not status_ok then
+  --   return
+  -- end
+  -- illuminate.on_attach(client)
 end
 
 return M
