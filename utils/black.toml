@@ -1,0 +1,16 @@
+[tool.black]
+line-length = 180
+skip-source-first-line = false
+skip-string-normalization = true
+skip-magic-trailing-comma = false
+preview = false
+check = false
+diff = false
+color = false
+fast = true
+include = "(\\.pyi?|\\.ipynb)$"
+exclude = "/(\\.direnv|\\.eggs|\\.git|\\.hg|\\.mypy_cache|\\.nox|\\.tox|\\.venv|venv|\\.svn|\\.ipynb_checkpoints|_build|buck-out|build|dist|__pypackages__)/"
+extend-exclude = ""
+force-exclude = ""
+quiet = false
+verbose = false
