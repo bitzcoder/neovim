@@ -13,22 +13,23 @@ return {
       return
     end
 
-    local lsp_formatting = function(bufnr)
+    local async_formatting = function(bufnr)
+      -- Check if the buffer number is provided, otherwise get the current buffer number
+      bufnr = bufnr or vim.api.nvim_get_current_buf()
+
+      -- Call lsp.buf.format with a filter function to format using null-ls client
       vim.lsp.buf.format({
         filter = function(client)
-          -- apply whatever logic you want (in this example, we'll only use null-ls)
           return client.name == "null-ls"
         end,
         bufnr = bufnr,
       })
-    end
 
-    local async_formatting = function(bufnr)
-      bufnr = bufnr or vim.api.nvim_get_current_buf()
+      -- Call lsp.buf_request for textDocument/formatting and apply the results
       vim.lsp.buf_request(bufnr, "textDocument/formatting", vim.lsp.util.make_formatting_params({}), function(err, res, ctx)
         if err then
           local err_msg = type(err) == "string" and err or err.message
-          -- you can modify the log message / level (or ignore it completely)
+          -- modify the log message / level (or ignore it completely)
           vim.notify("formatting: " .. err_msg, vim.log.levels.WARN)
           return
         end
@@ -72,7 +73,6 @@ return {
             group = augroup,
             buffer = bufnr,
             callback = function()
-              lsp_formatting(bufnr)
               async_formatting(bufnr)
             end,
           })
