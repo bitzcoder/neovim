@@ -118,11 +118,13 @@ return {
             luasnip = "[Snippet]",
             buffer = "[Buffer]",
             path = "[Path]",
+            nvim_lua = "[NLAPI]",
           })[entry.source.name]
           return vim_item
         end,
       },
       sources = {
+        { name = "nvim_lua" },
         { name = "nvim_lsp" },
         { name = "luasnip" },
         { name = "buffer" },
