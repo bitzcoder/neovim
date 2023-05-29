@@ -80,11 +80,8 @@ end
 
 M.on_attach = function(client, bufnr)
   -- Disable document formatting provider for specific language servers
-  if client.name == "tsserver" then
-    client.server_capabilities.documentFormattingProvider = false
-  end
-
-  if client.name == "lua_ls" then
+  local disable_formatting = { "tsserver", "lua_ls", "html" }
+  if vim.tbl_contains(disable_formatting, client.name) then
     client.server_capabilities.documentFormattingProvider = false
   end
 
