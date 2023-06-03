@@ -16,7 +16,7 @@ return {
   },
   {
     "mrjones2014/nvim-ts-rainbow", -- Rainbow parentheses
-    -- enabled = false,
+    enabled = false,
     event = { "BufReadPost", "BufNewFile" },
     dependencies = "nvim-treesitter/nvim-treesitter",
   },

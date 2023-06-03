@@ -42,9 +42,13 @@ return {
           sp = "#4B5382",
           undercurl = true,
         }
+        hl.SpellCap = {
+          sp = "#D6E6F5",
+          undercurl = true,
+        }
       end,
     })
     -- colorscheme
-    vim.cmd([[colorscheme tokyonight]])
+    vim.cmd.colorscheme("tokyonight")
   end,
 }

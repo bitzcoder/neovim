@@ -173,6 +173,13 @@ return {
         width = 30,
         side = "left",
       },
+      filters = {
+        dotfiles = false,
+        git_clean = false,
+        no_buffer = false,
+        custom = {".git", "__pycache__"},
+        exclude = {},
+      },
     })
   end,
 }

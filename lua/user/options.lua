@@ -24,6 +24,7 @@ local options = {
   writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   expandtab = true, -- convert tabs to spaces
   shiftwidth = 2, -- the number of spaces inserted for each indentation
+  background = "dark",
   tabstop = 2, -- insert 2 spaces for a tab
   cursorline = true, -- highlight the current line
   number = true, -- set numbered lines
@@ -42,9 +43,7 @@ local options = {
   fillchars = { -- Customize fold-related characters
     fold = " ",
   },
-  foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').]]
-    .. [[' ... '.trim(getline(v:foldend)).]]
-    .. [[' ('.(v:foldend-v:foldstart).' lines folded...)']],
+  foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').]] .. [[' ... '.trim(getline(v:foldend)).]] .. [[' ('.(v:foldend-v:foldstart).' lines folded...)']],
   -- title = true,
   -- titlestring = "%<%t %{&modified ? '*' : ''}%( (%{expand(\"%:~:.:h\")})%)%( %a%) - nvim",
 }
