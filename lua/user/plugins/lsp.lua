@@ -2,11 +2,16 @@ local servers = { "jsonls", "lua_ls", "pyright", "html", "rust_analyzer" }
 
 return {
   {
-    "williamboman/mason.nvim",
-    priority = 100,
-    build = ":MasonUpdate",
-    config = function()
-      require("mason").setup({
+    -- Bridges Mason with LSP configuration
+    "williamboman/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = servers, -- Ensure specified servers are installed
+      automatic_installation = true,
+    },
+    dependencies = {
+      "williamboman/mason.nvim",
+      build = ":MasonUpdate",
+      opts = {
         check_outdated_packages_on_open = true,
         ui = {
           icons = {
@@ -18,19 +23,8 @@ return {
           width = 0.8,
           height = 0.8,
         },
-      })
-    end,
-  },
-  {
-    -- Bridges Mason with LSP configuration
-    "williamboman/mason-lspconfig.nvim",
-    priority = 80,
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = servers, -- Ensure specified servers are installed
-        automatic_installation = true,
-      })
-    end,
+      },
+    },
   },
   {
     -- Configuration for Neovim LSP

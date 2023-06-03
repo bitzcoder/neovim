@@ -1,5 +1,7 @@
 return {
   "folke/which-key.nvim",
+  lazy = true,
+  keys = "<leader>",
   config = function()
     -- vim.o.timeout = true
     -- vim.o.timeoutlen = 500
@@ -170,7 +172,7 @@ return {
           "Workspace Symbols",
         },
       },
-      ["L"] = { "<cmd>Lazy<cr>", "Onen Lazy" },
+      ["L"] = { "<cmd>Lazy<cr>", "Open Lazy" },
       n = {
         name = "Neorg",
         i = { "<cmd>Neorg index<cr>", "Go to Index File" },
@@ -202,5 +204,5 @@ return {
     }
     require("which-key").setup(setup)
     require("which-key").register(mappings, opts)
-   end,
+  end,
 }
