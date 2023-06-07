@@ -1,40 +1,77 @@
 return {
   "goolord/alpha-nvim",
+  lazy = false,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     local dashboard = require("alpha.themes.dashboard")
     dashboard.section.header.val = {
-      [[                               __                ]],
-      [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
-      [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
-      [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
-      [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
-      [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
+      "                                                    ",
+      " ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+      " ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+      " ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+      " ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+      " ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+      " ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+      "                                                    ",
     }
     dashboard.section.buttons.val = {
-      dashboard.button("f", "󰈞  Find file", ":Telescope find_files <CR>"),
-      dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
-      dashboard.button("p", "  Find project", ":Telescope projects <CR>"),
-      dashboard.button("r", "󰄉  Recently used files", ":Telescope oldfiles <CR>"),
-      dashboard.button("t", "󰊄  Find text", ":Telescope live_grep <CR>"),
-      dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua <CR>"),
-      dashboard.button("q", "󰅚  Quit Neovim", ":qa<CR>"),
+      dashboard.button("f", "󰈞 " .. " Find file", ":Telescope find_files <CR>"),
+      dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
+      dashboard.button("r", "󰄉 " .. " Recent files", ":Telescope oldfiles <CR>"),
+      dashboard.button("p", " " .. " Find project", ":Telescope projects <CR>"),
+      -- dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
+      dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+      dashboard.button("l", "󰒲" .. "  Lazy", ":Lazy<CR>"),
+      dashboard.button("q", " " .. " Quit", ":qa<CR>"),
     }
-    local function footer()
-      -- NOTE: requires the fortune-mod package to work
-      -- local handle = io.popen("fortune")
-      -- local fortune = handle:read("*a")
-      -- handle:close()
-      -- return fortune
-      return "Asif"
+    for _, button in ipairs(dashboard.section.buttons.val) do
+      button.opts.hl = "AlphaButtons"
+      button.opts.hl_shortcut = "AlphaShortcut"
     end
-    dashboard.section.footer.val = footer()
-    dashboard.section.footer.opts.hl = "Type"
-    dashboard.section.header.opts.hl = "Include"
-    dashboard.section.buttons.opts.hl = "Keyword"
+    dashboard.section.footer.opts.hl = "Constant"
+    dashboard.section.header.opts.hl = "AlphaHeader"
+    dashboard.section.buttons.opts.hl = "AlphaButtons"
+    dashboard.opts.layout[1].val = 0
 
-    dashboard.opts.opts.noautocmd = true
-    -- vim.cmd([[autocmd User AlphaReady echo 'ready']])
-    require("alpha").setup(dashboard.opts)
+    if vim.o.filetype == "lazy" then
+      -- close and re-open Lazy after showing alpha
+      vim.notify("Missing plugins installed!", vim.log.levels.INFO, { title = "lazy.nvim" })
+      vim.cmd.close()
+      require("alpha").setup(dashboard.opts)
+      require("lazy").show()
+    else
+      require("alpha").setup(dashboard.opts)
+    end
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "LazyVimStarted",
+      callback = function()
+        local stats = require("lazy").stats()
+        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+        -- local now = os.date "%d-%m-%Y %H:%M:%S"
+        local version = "   v" .. vim.version().major .. "." .. vim.version().minor .. "." .. vim.version().patch
+        local fortune = require("alpha.fortune")
+        local quote = table.concat(fortune(), "\n")
+        local plugins = "⚡ Neovim loaded " .. stats.count .. " plugins in " .. ms .. "ms"
+        local footer = version .. "\t" .. plugins .. "\n" .. quote
+        dashboard.section.footer.val = footer
+        pcall(vim.cmd.AlphaRedraw)
+      end,
+    })
+    -- Hide tabline in Alpha Dashboard
+    local alpha = vim.api.nvim_create_augroup("_alpha", { clear = true })
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "AlphaReady",
+      callback = function()
+        vim.opt.showtabline = 0
+        vim.api.nvim_create_autocmd("BufUnload", {
+          buffer = 0,
+          callback = function()
+            vim.opt.showtabline = 2
+          end,
+          group = alpha,
+        })
+      end,
+      group = alpha,
+    })
   end,
 }
