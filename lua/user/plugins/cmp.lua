@@ -1,27 +1,34 @@
 return {
-  "hrsh7th/nvim-cmp", -- Required
+  "hrsh7th/nvim-cmp",
   event = { "InsertEnter", "CmdlineEnter" },
   dependencies = {
-    "hrsh7th/cmp-nvim-lsp", -- Required
-    "hrsh7th/cmp-buffer", --  Optional
-    "hrsh7th/cmp-path", --  Optional
-    "saadparwaiz1/cmp_luasnip",
-    "hrsh7th/cmp-nvim-lua", --  Optional
-    "L3MON4D3/LuaSnip",
-    "rafamadriz/friendly-snippets",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-cmdline",
+    "hrsh7th/cmp-nvim-lua",
+    {
+      "saadparwaiz1/cmp_luasnip",
+      dependencies = {
+        {
+          "L3MON4D3/LuaSnip",
+          dependencies = {
+            "rafamadriz/friendly-snippets",
+            config = function()
+              require("luasnip.loaders.from_vscode").lazy_load()
+            end,
+          },
+          config = {
+            history = true,
+            delete_check_events = "TextChanged",
+          },
+        },
+      },
+    },
   },
   config = function()
-    local cmp_status_ok, cmp = pcall(require, "cmp")
-    if not cmp_status_ok then
-      return
-    end
-
-    local snip_status_ok, luasnip = pcall(require, "luasnip")
-    if not snip_status_ok then
-      return
-    end
-
-    require("luasnip/loaders/from_vscode").lazy_load()
+    local cmp = require("cmp")
+    local luasnip = require("luasnip")
 
     local check_backspace = function()
       local col = vim.fn.col(".") - 1
@@ -35,6 +42,7 @@ return {
       Function = "󰊕",
       Constructor = "",
       Field = "",
+      Ellipsis = "",
       Variable = "󰆧",
       Class = "󰌗",
       Interface = "",
@@ -81,12 +89,10 @@ return {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif luasnip.expandable() then
-            luasnip.expand()
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           elseif check_backspace() then
-            fallback()
+            cmp.complete()
           else
             fallback()
           end
@@ -107,23 +113,36 @@ return {
           "s",
         }),
       },
+
       formatting = {
         fields = { "kind", "abbr", "menu" },
         format = function(entry, vim_item)
-          -- Kind icons
-          vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
-          -- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
-          vim_item.menu = ({
+          local max_width = 0
+          local source_names = {
             nvim_lsp = "[LSP]",
             luasnip = "[Snippet]",
             buffer = "[Buffer]",
             path = "[Path]",
             nvim_lua = "[NLAPI]",
-          })[entry.source.name]
+          }
+          local duplicates = {
+            nvim_lsp = 0,
+            luasnip = 1,
+            buffer = 1,
+            path = 1,
+            nvim_lua = 0,
+          }
+          local duplicates_default = 0
+          if max_width ~= 0 and #vim_item.abbr > max_width then
+            vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. kind_icons.Ellipsis
+          end
+          vim_item.kind = kind_icons[vim_item.kind]
+          vim_item.menu = source_names[entry.source.name]
+          vim_item.dup = duplicates[entry.source.name] or duplicates_default
           return vim_item
         end,
       },
-      sources = {
+      sources = cmp.config.sources({
         { name = "nvim_lua" },
         { name = "nvim_lsp" },
         { name = "luasnip" },
@@ -136,7 +155,7 @@ return {
             end,
           },
         },
-      },
+      }),
       confirm_opts = {
         behavior = cmp.ConfirmBehavior.Replace,
         select = false,
@@ -153,6 +172,23 @@ return {
         ghost_text = false,
         native_menu = false,
       },
+    })
+    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline({ "/", "?" }, {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = "buffer" },
+      },
+    })
+
+    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline(":", {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = "path" },
+      }, {
+        { name = "cmdline" },
+      }),
     })
   end,
 }
