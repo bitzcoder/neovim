@@ -1,14 +1,6 @@
-local opts = { noremap = true, silent = true }
-
-local term_opts = { silent = true }
-
+local opts = { remap = false, silent = true }
 -- Shorten function name
-local keymap = vim.api.nvim_set_keymap
-
---Remap space as leader key
-keymap("", "<Space>", "<Nop>", opts)
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
+local map = vim.keymap.set
 
 -- Modes
 --   normal_mode = "n",
@@ -17,108 +9,95 @@ vim.g.maplocalleader = ","
 --   visual_block_mode = "x",
 --   term_mode = "t",
 --   command_mode = "c",
-
 --------------------------------------------------------- Normal ------------------------------------------------
 -- Change the keybinding for incrementing numbers
-keymap("n", "<C-i>", "<C-a>", opts)
+map("n", "<C-i>", "<C-a>", opts)
 -- Select all texts
-keymap("n", "<C-a>", "ggVG", opts)
+map("n", "<C-a>", "ggVG", opts)
 
 -- Better window navigation
-keymap("n", "<C-h>", "<C-w>h", opts)
-keymap("n", "<C-j>", "<C-w>j", opts)
-keymap("n", "<C-k>", "<C-w>k", opts)
-keymap("n", "<C-l>", "<C-w>l", opts)
+map("n", "<C-h>", "<C-w>h", opts)
+map("n", "<C-j>", "<C-w>j", opts)
+map("n", "<C-k>", "<C-w>k", opts)
+map("n", "<C-l>", "<C-w>l", opts)
 
--- Go the different buffers
-keymap("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
-keymap("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
-keymap("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
-keymap("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
-keymap("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
-keymap("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
-keymap("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
-keymap("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
-keymap("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
-keymap("n", "<leader>0", ":BufferLineGoToBuffer -1<CR>", opts) -- Go to last buffer
+-- Go the different buffers(requires bufferline plugin)
+map("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
+map("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
+map("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
+map("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
+map("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
+map("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
+map("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
+map("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
+map("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
+map("n", "<leader>0", ":BufferLineGoToBuffer -1<CR>", opts) -- Go to last buffer
 
 -- Resize with arrows
-keymap("n", "<C-Up>", ":resize -2<CR>", opts)
-keymap("n", "<C-Down>", ":resize +2<CR>", opts)
-keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
-keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
+map("n", "<C-Up>", ":resize -2<CR>", opts)
+map("n", "<C-Down>", ":resize +2<CR>", opts)
+map("n", "<C-Left>", ":vertical resize -2<CR>", opts)
+map("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
--- Navigate buffers
-keymap("n", "<tab>", ":BufferLineCycleNext<CR>", opts)
-keymap("n", "<S-tab>", ":BufferLineCyclePrev<CR>", opts)
--- keymap("n", "<S-l>", ":bnext<CR>", opts)
--- keymap("n", "<S-h>", ":bprevious<CR>", opts)
+-- Navigate buffers(requires bufferline plugin)
+map("n", "<tab>", ":BufferLineCycleNext<CR>", opts)
+map("n", "<S-tab>", ":BufferLineCyclePrev<CR>", opts)
 
 -- Move text up and down
-keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
-keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
+map("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
+map("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Move to the Beginning and end of the line
-keymap("n", "H", "^", opts)
-keymap("n", "L", "$", opts)
-keymap("v", "H", "^", opts)
-keymap("v", "L", "$", opts)
-keymap("x", "H", "^", opts)
-keymap("x", "L", "$", opts)
-keymap("o", "H", "^", opts)
-keymap("o", "L", "$", opts)
+map({ "n", "v", "x", "o" }, "H", "^", opts)
+map({ "n", "v", "x", "o" }, "L", "$", opts)
 
 -- Center Cursors
-keymap("n", "J", "mzJ`z", opts)
-keymap("n", "<C-d>", "<C-d>zz", opts)
-keymap("n", "<C-u>", "<C-u>zz", opts)
-keymap("n", "n", "nzzzv", opts)
-keymap("n", "N", "Nzzzv", opts)
+map("n", "J", "mzJ`z", opts)
+map("n", "<C-d>", "<C-d>zz", opts)
+map("n", "<C-u>", "<C-u>zz", opts)
+map("n", "n", "nzzzv", opts)
+map("n", "N", "Nzzzv", opts)
 
--- Deleting and Yanking lines without making a new line while pasting
-keymap("n", "dil", "dd:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
-keymap("n", "yil", "yy:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
+-- Deleting and Yanking without new line char
+map("n", "dil", "dd:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
+map("n", "yil", "yy:let @+=matchlist(strtrans(@+),'[ ]*\\zs.*\\ze\\^@')[0]<CR>", opts)
 
 -- Search and Replace
-keymap("n", "<A-r>", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], opts)
+map("n", "<A-r>", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], opts)
 
--- Setting "gx" manually for when netrw is disabled
-keymap("n", "gx", "<cmd>!xdg-open <cfile><CR>", opts)
+-- Setting "gx" manually for when netrw is disabled(Linux only)
+map("n", "gx", "<cmd>!xdg-open <cfile><CR>", opts)
 
+-- open terminal
+map("n", "<leader>tt", ":term<cr>", opts)
 -------------------------------------------------Insert --------------------------------------------------------
 
--- Press jj fast to enter
-keymap("i", "jj", "<ESC>", opts)
+-- Press jj fast to enter Insert mode
+map("i", "jj", "<ESC>", opts)
+
+-- Break undo sequence
+map("i", ".", ".<c-g>u", opts)
+map("i", ";", ";<c-g>u", opts)
+map("i", ",", ",<c-g>u", opts)
+map("i", "(", "(<c-g>u", opts)
+map("i", "{", "{<c-g>u", opts)
+map("i", "[", "[<c-g>u", opts)
 
 ------------------------------------------------- Visual --------------------------------------------------------
 -- Stay in indent mode
-keymap("v", "<", "<gv", opts)
-keymap("v", ">", ">gv", opts)
+map("v", "<", "<gv", opts)
+map("v", ">", ">gv", opts)
 
 -- Move text up and down
-keymap("v", "<A-j>", ":m .+1<CR>==", opts)
-keymap("v", "<A-k>", ":m .-2<CR>==", opts)
-keymap("v", "p", '"_dP', opts)
+map("v", "<A-j>", ":m .+1<CR>==", opts)
+map("v", "<A-k>", ":m .-2<CR>==", opts)
+
+-- Paste without Yanking in Visual mode
+map("v", "p", '"_dP', opts)
 
 -------------------------------------------------- Visual Block -----------------------------------------------------
 -- Move text up and down
-keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
-keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
-
---------------------------------------------------- Terminal --------------------------------------------------------
-keymap("n", "<leader>tt", ":term<cr>", opts)
-
--- Better terminal navigation
-keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
-keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
-keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
-keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
-
--- Nvimtree
-keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
-
--- Telescope
-keymap("n", "<leader>f", ":Telescope find_files<cr>", opts)
-keymap("n", "<C-t>", ":Telescope live_grep<cr>", opts)
+map("x", "J", ":move '>+1<CR>gv-gv", opts)
+map("x", "K", ":move '<-2<CR>gv-gv", opts)
+map("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+map("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
