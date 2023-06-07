@@ -52,6 +52,11 @@ for k, v in pairs(options) do
   vim.opt[k] = v
 end
 
+-- Set leader Mappings
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+
 vim.g.python3_host_prog = "/home/asif/.venv/bin/python3"
 vim.g.python_host_prog = "/home/asif/.venv/bin/python"
 
@@ -63,7 +68,7 @@ if vim.g.neovide then
 end
 
 -- This can do what nvim impatient used to do!
-vim.loader.enable()
+-- vim.loader.enable()
 
 -- vim.opt.shortmess = "ilmnrx"                        -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages
