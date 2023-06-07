@@ -1,3 +1,74 @@
+local augroup = function(name)
+  return vim.api.nvim_create_augroup(name, { clear = true })
+end
+
+-- close some filetypes with <q>
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("close_with_q"),
+  pattern = {
+    "OverseerForm",
+    "OverseerList",
+    "floggraph",
+    "fugitive",
+    "git",
+    "help",
+    "lspinfo",
+    "man",
+    "neotest-output",
+    "neotest-summary",
+    "qf",
+    "query",
+    "spectre_panel",
+    "startuptime",
+    "toggleterm",
+    "tsplayground",
+    "vim",
+  },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+  end,
+})
+
+-- Highlight on yank
+vim.api.nvim_create_autocmd({ "TextYankPost" }, {
+  group = augroup("highlight_yank"),
+  callback = function()
+    vim.highlight.on_yank({ higroup = "Visual", timeout = 200 })
+  end,
+})
+
+-- fix comment
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+  group = augroup("comment_newline"),
+  pattern = { "*" },
+  callback = function()
+    vim.cmd([[set formatoptions-=cro]])
+  end,
+})
+
+-- Toggle Between Absolute and Relative Line Numbers.
+local numbertoggle = vim.api.nvim_create_augroup("NumberToggle", {})
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "CmdlineLeave", "WinEnter" }, {
+  pattern = "*",
+  group = numbertoggle,
+  callback = function()
+    if vim.o.nu and vim.api.nvim_get_mode().mode ~= "i" then
+      vim.opt.relativenumber = true
+    end
+  end,
+})
+vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "CmdlineEnter", "WinLeave" }, {
+  pattern = "*",
+  group = numbertoggle,
+  callback = function()
+    if vim.o.nu then
+      vim.opt.relativenumber = false
+      vim.cmd("redraw")
+    end
+  end,
+})
+
 -- Enable spellcheck on gitcommit and markdown
 vim.api.nvim_create_autocmd({ "FileType" }, {
   pattern = { "gitcommit", "markdown" },
@@ -14,74 +85,55 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     vim.cmd([[ %s/\s\+$//e ]])
   end,
 })
-vim.cmd([[
-  augroup _general_settings
-    autocmd!
-    autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR>
-    autocmd TextYankPost * silent!lua require('vim.highlight').on_yank({higroup = 'Visual', timeout = 200})
-    autocmd BufWinEnter * :set formatoptions-=cro
-    autocmd FileType qf set nobuflisted
-  augroup end
 
-  " Toggle Between Absolute and Relative Line Numbers.
-  augroup numbertoggle
-    autocmd!
-    autocmd BufEnter,FocusGained,InsertLeave,CmdlineLeave,WinEnter * if &nu && mode() != 'i' | set rnu | endif
-    autocmd BufLeave,FocusLost,InsertEnter,CmdlineEnter,WinLeave * if &nu | set nornu | redraw | endif
-  augroup END
+-- Auto close Nvim-Tree if it's the last buffer
+vim.api.nvim_create_autocmd("QuitPre", {
+  callback = function()
+    local invalid_win = {}
+    local wins = vim.api.nvim_list_wins()
+    for _, w in ipairs(wins) do
+      local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(w))
+      if bufname:match("NvimTree_") ~= nil then
+        table.insert(invalid_win, w)
+      end
+    end
+    if #invalid_win == #wins - 1 then
+      -- Should quit, so we close all invalid windows.
+      for _, w in ipairs(invalid_win) do
+        vim.api.nvim_win_close(w, true)
+      end
+    end
+  end,
+})
 
-  " Can't remember what these do!!
-  set ssop-=options
-  set ssop-=folds
-  let &t_Cs = "\e[4:3m"
+-- resize splits if window got resized
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+  group = augroup("resize_splits"),
+  callback = function()
+    vim.cmd("tabdo wincmd =")
+  end,
+})
 
-  " Clears the cmdline messages when scrolling(off the window)
-  " This is temporary fix (should work by default, doesn't for some reason.)
-  autocmd WinScrolled * :echo
+-- clear cmd output
+vim.api.nvim_create_autocmd({ "CursorHold" }, {
+  group = augroup("clear_term"),
+  callback = function()
+    vim.fn.timer_start(3000, function()
+      vim.cmd.echon('""')
+    end)
+  end,
+})
 
-  " Closes Nvim-Tree while quiting neovim
-  autocmd QuitPre * :NvimTreeClose
-
-  " augroup _git
-  "   autocmd!
-  "   autocmd FileType gitcommit setlocal wrap
-  "   autocmd FileType gitcommit setlocal spell
-  " augroup end
-
- " INDENTATION
-  au BufNewFile,BufRead *.py
-    \ set expandtab       |" replace tabs with spaces
-    \ set autoindent      |" copy indent when starting a new line
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-
-  augroup _markdown
-    autocmd!
-    autocmd FileType markdown setlocal wrap
-    autocmd FileType markdown setlocal spell
-  augroup end
-
-  augroup _auto_resize
-    autocmd!
-    autocmd VimResized * tabdo wincmd =
-  augroup end
-
-  augroup _alpha
-    autocmd!
-    autocmd User AlphaReady set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
-  augroup end
-
-  " " Open folds
-  " autocmd BufEnter * normal zR
-
-  " " This doesn't work with async = true
-  " augroup AutoFormat
-  "   autocmd!
-  "   autocmd BufWritePre * lua vim.lsp.buf.format({async=true})
-  "   autocmd BufWritePre * write
-  " augroup END
-
-
-  " autocmd insertenter,insertleave * set cul!
-]])
+-- Go to last location when opening a buffer
+vim.api.nvim_create_autocmd("BufReadPre", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "<buffer>",
+      once = true,
+      callback = function()
+        vim.cmd([[if &ft !~# 'commit\|rebase' && line("'\"") > 1 && line("'\"") <= line("$") | exe 'normal! g`"' | endif]])
+      end,
+    })
+  end,
+})
