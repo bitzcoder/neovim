@@ -58,7 +58,7 @@ return {
       on_open = function(_)
         vim.cmd("startinsert!")
 
-        -- Make "<Esc>" and "<j>" keys work properly within lazygit
+        -- Make "Esc" and "j" keys work properly within lazygit
         local keymaps = vim.api.nvim_buf_get_keymap(0, "t")
         for _, keymap in ipairs(keymaps) do
           if keymap.lhs == "<Esc>" or keymap.lhs == "jj" then

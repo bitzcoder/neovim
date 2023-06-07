@@ -80,6 +80,7 @@ return {
       local current_line = vim.fn.line(".")
       local total_lines = vim.fn.line("$")
       local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
+      -- local chars = { "██", "▇▇", "▆▆", "▅▅", "▄▄", "▃▃", "▂▂", "▁▁", "__" }
       local line_ratio = current_line / total_lines
       local index = math.ceil(line_ratio * #chars)
       return chars[index]
@@ -90,13 +91,12 @@ return {
     end
 
     require("lualine").setup({
-
       options = {
         icons_enabled = true,
         theme = "auto",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
-        disabled_filetypes = { "alpha", "dashboard", "NvimTree", "Outline", "TelescopePrompt" },
+        disabled_filetypes = { "alpha", "dashboard", "NvimTree", "Outline", "TelescopePrompt", "lazy" },
         always_divide_middle = true,
       },
       sections = {
