@@ -96,7 +96,10 @@ return {
         theme = "auto",
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
-        disabled_filetypes = { "alpha", "dashboard", "NvimTree", "Outline", "TelescopePrompt", "lazy" },
+        disabled_filetypes = {
+          statusline = { "alpha", "dashboard", "NvimTree", "Outline", "TelescopePrompt", "lazy" },
+          winbar = { "help", "alpha", "lazy" },
+        },
         always_divide_middle = true,
       },
       sections = {
@@ -116,6 +119,9 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
+      -- winbar = {
+      --   lualine_x = { filename },
+      -- },
       tabline = {},
       extensions = {},
     })

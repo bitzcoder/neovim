@@ -18,14 +18,31 @@ return {
               require("luasnip.loaders.from_vscode").lazy_load()
             end,
           },
-          config = {
-            history = true,
-            delete_check_events = "TextChanged",
-          },
+          config = function()
+            local types = require("luasnip.util.types")
+            -- Loads in snippets
+            require("luasnip.loaders.from_lua").load({
+              paths = vim.fn["stdpath"]("config") .. "/snippets/",
+            })
+            require("luasnip").config.set_config({
+              history = true,
+              update_events = "TextChanged,TextChangedI",
+              enable_autosnippets = true,
+              store_selection_keys = "<Tab>",
+              ext_opts = {
+                [types.choiceNode] = {
+                  active = {
+                    virt_text = { { "<- Choice" } },
+                  },
+                },
+              },
+            })
+          end,
         },
       },
     },
   },
+
   config = function()
     local cmp = require("cmp")
     local luasnip = require("luasnip")

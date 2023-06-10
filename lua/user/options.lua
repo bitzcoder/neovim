@@ -42,6 +42,7 @@ local options = {
   foldlevelstart = 99, -- Set the initial fold level
   fillchars = { -- Customize fold-related characters
     fold = " ",
+    eob = " ",
   },
   foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').]] .. [[' ... '.trim(getline(v:foldend)).]] .. [[' ('.(v:foldend-v:foldstart).' lines folded...)']],
   -- title = true,
