@@ -4,7 +4,7 @@ end
 
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("close_with_q"),
+  group = augroup("CloseWithQ"),
   pattern = {
     "OverseerForm",
     "OverseerList",
@@ -106,13 +106,23 @@ vim.api.nvim_create_autocmd("QuitPre", {
   end,
 })
 
--- resize splits if window got resized
-vim.api.nvim_create_autocmd({ "VimResized" }, {
-  group = augroup("resize_splits"),
-  callback = function()
-    vim.cmd("tabdo wincmd =")
+-- Open help in a new buffer instead of a vsplit
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  pattern = "*",
+  callback = function(event)
+    if vim.bo[event.buf].filetype == "help" then
+      vim.cmd.only()
+      vim.bo.buflisted = true
+    end
   end,
 })
+-- resize splits if window got resized
+-- vim.api.nvim_create_autocmd({ "VimResized" }, {
+--   group = augroup("resize_splits"),
+--   callback = function()
+--     vim.cmd("tabdo wincmd =")
+--   end,
+-- })
 
 -- clear cmd output
 vim.api.nvim_create_autocmd({ "CursorHold" }, {
