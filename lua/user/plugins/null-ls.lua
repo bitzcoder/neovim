@@ -1,22 +1,12 @@
 return {
   -- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua.
   "jose-elias-alvarez/null-ls.nvim",
-  config = function(_, opts) -- opts is received from child spec (formatting, linting)
-    local sources = {} -- a list of to_register
-    for _, to_register_wrap in pairs(opts) do
-      local to_register = to_register_wrap()
-      table.insert(sources, to_register)
-    end
-
-    local null_ls_status_ok, null_ls = pcall(require, "null-ls")
-    if not null_ls_status_ok then
-      return
-    end
+  config = function()
+    local null_ls = require("null-ls")
 
     local async_formatting = function(bufnr)
       -- Check if the buffer number is provided, otherwise get the current buffer number
       bufnr = bufnr or vim.api.nvim_get_current_buf()
-
       -- Call lsp.buf_request for textDocument/formatting and apply the results
       vim.lsp.buf_request(bufnr, "textDocument/formatting", vim.lsp.util.make_formatting_params({}), function(err, res, ctx)
         if err then
@@ -25,12 +15,10 @@ return {
           vim.notify("formatting: " .. err_msg, vim.log.levels.WARN)
           return
         end
-
         -- don't apply results if buffer is unloaded or has been modified
         if not vim.api.nvim_buf_is_loaded(bufnr) or vim.api.nvim_buf_get_option(bufnr, "modified") then
           return
         end
-
         if res then
           local client = vim.lsp.get_client_by_id(ctx.client_id)
           vim.lsp.util.apply_text_edits(res, bufnr, client and client.offset_encoding or "utf-16")
@@ -55,7 +43,7 @@ return {
         formatting.prettier.with({ extra_args = { "--config", vim.fn.expand("~/.config/nvim/utils/prettierrc.toml") } }),
         formatting.black.with({ extra_args = { "--config", vim.fn.expand("~/.config/nvim/utils/black.toml") } }),
         formatting.stylua.with({ extra_args = { "--config-path", vim.fn.expand("~/.config/nvim/utils/stylua.toml") } }),
-        -- diagnostics.cspell.with({ filetypes = { "markdown", "txt", "text" } }),
+        diagnostics.pylint.with({ extra_args = { "--rcfile", vim.fn.expand("~/.config/nvim/utils/pylint.toml") } }),
       },
       -- Format on save
       on_attach = function(client, bufnr)
