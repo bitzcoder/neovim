@@ -2,6 +2,20 @@ local augroup = function(name)
   return vim.api.nvim_create_augroup(name, { clear = true })
 end
 
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  pattern = { "" },
+  callback = function()
+    local get_project_dir = function()
+      local cwd = vim.fn.getcwd()
+      local project_dir = vim.split(cwd, "/")
+      local project_name = project_dir[#project_dir]
+      return project_name
+    end
+    vim.opt.title = true
+    vim.opt.titlestring = get_project_dir() .. " - nvim"
+  end,
+})
+
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("CloseWithQ"),
@@ -48,26 +62,26 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 })
 
 -- Toggle Between Absolute and Relative Line Numbers.
-local numbertoggle = vim.api.nvim_create_augroup("NumberToggle", {})
-vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "CmdlineLeave", "WinEnter" }, {
-  pattern = "*",
-  group = numbertoggle,
-  callback = function()
-    if vim.o.nu and vim.api.nvim_get_mode().mode ~= "i" then
-      vim.opt.relativenumber = true
-    end
-  end,
-})
-vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "CmdlineEnter", "WinLeave" }, {
-  pattern = "*",
-  group = numbertoggle,
-  callback = function()
-    if vim.o.nu then
-      vim.opt.relativenumber = false
-      vim.cmd("redraw")
-    end
-  end,
-})
+-- local numbertoggle = vim.api.nvim_create_augroup("NumberToggle", {})
+-- vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "InsertLeave", "CmdlineLeave", "WinEnter" }, {
+--   pattern = "*",
+--   group = numbertoggle,
+--   callback = function()
+--     if vim.o.nu and vim.api.nvim_get_mode().mode ~= "i" then
+--       vim.opt.relativenumber = true
+--     end
+--   end,
+-- })
+-- vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "InsertEnter", "CmdlineEnter", "WinLeave" }, {
+--   pattern = "*",
+--   group = numbertoggle,
+--   callback = function()
+--     if vim.o.nu then
+--       vim.opt.relativenumber = false
+--       vim.cmd("redraw")
+--     end
+--   end,
+-- })
 
 -- Enable spellcheck on gitcommit and markdown
 vim.api.nvim_create_autocmd({ "FileType" }, {
@@ -125,7 +139,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 -- })
 
 -- clear cmd output
-vim.api.nvim_create_autocmd({ "CursorHold" }, {
+vim.api.nvim_create_autocmd({ "CursorHoldI" }, {
   group = augroup("clear_term"),
   callback = function()
     vim.fn.timer_start(3000, function()
