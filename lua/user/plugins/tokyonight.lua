@@ -4,8 +4,6 @@ return {
   priority = 1000,
   config = function()
     require("tokyonight").setup({
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
       style = "moon", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
       light_style = "day", -- The theme is used when the background is set to light
       transparent = true, -- Enable this to disable setting the background color
@@ -25,30 +23,21 @@ return {
       day_brightness = 0.3, -- Adjusts the brightness of the colors of the **Day** style. Number between 0 and 1, from dull to vibrant colors
       hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
       dim_inactive = false, -- dims inactive windows
-      lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
-      -- You can override specific color groups to use other groups or a hex color
-      -- function will be called with a ColorScheme table
-      --@param colors ColorScheme
+      lualine_bold = true, -- When `true`, section headers in the lualine theme will be bold
+
       --[[ on_colors = function(colors) end, ]]
 
-      -- You can override specific highlights to use other groups or a hex color
-      -- function will be called with a Highlights and ColorScheme table
-      --@param highlights Highlights
-      --@param colors ColorScheme
-      --[[ on_highlights = function(highlights, colors) end, ]]
-
-      on_highlights = function(hl)
-        hl.SpellBad = {
-          sp = "#4B5382",
-          undercurl = true,
-        }
-        hl.SpellCap = {
-          sp = "#D6E6F5",
-          undercurl = true,
-        }
+      on_highlights = function(hl, c)
+        hl.SpellBad = { sp = "#828bb8", undercurl = true }
+        hl.SpellCap = { sp = "#D6E6F5", undercurl = true }
+        hl.CursorLineNr = { fg = c.orange, bold = true }
+        hl.Directory = { fg = "#86e1fc" }
+        hl.NvimTreeFolderIcon = { bg = c.none, fg = c.orange }
+        hl.FidgetTitle = { fg = c.orange, bold = true }
+        hl.FidgetTask = { fg = c.blue }
       end,
     })
-    -- colorscheme
+    -- ColorScheme
     vim.cmd.colorscheme("tokyonight")
   end,
 }
