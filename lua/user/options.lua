@@ -45,8 +45,6 @@ local options = {
     eob = " ",
   },
   foldtext = [[substitute(getline(v:foldstart),'\\t',repeat('\ ',&tabstop),'g').]] .. [[' ... '.trim(getline(v:foldend)).]] .. [[' ('.(v:foldend-v:foldstart).' lines folded...)']],
-  -- title = true,
-  -- titlestring = "%<%t %{&modified ? '*' : ''}%( (%{expand(\"%:~:.:h\")})%)%( %a%) - nvim",
 }
 
 for k, v in pairs(options) do
@@ -69,7 +67,7 @@ if vim.g.neovide then
 end
 
 -- This can do what nvim impatient used to do!
--- vim.loader.enable()
+vim.loader.enable()
 
 -- vim.opt.shortmess = "ilmnrx"                        -- flags to shorten vim messages, see :help 'shortmess'
 vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages

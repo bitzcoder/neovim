@@ -5,3 +5,6 @@ neovim/!
 facebook
 json
 neovim
+ColorScheme
+lualine
+tokyonight

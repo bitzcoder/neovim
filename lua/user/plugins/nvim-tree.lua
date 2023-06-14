@@ -1,10 +1,6 @@
 return {
   "nvim-tree/nvim-tree.lua",
   version = "*",
-  -- cmd = { "NvimTreeToggle", "NvimTreeClose", "NvimTreeOpen" },
-  -- keys = {
-  --   { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Nvimtree" },
-  -- },
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
@@ -15,8 +11,6 @@ return {
       local function opts(desc)
         return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
       end
-
-      api.config.mappings.default_on_attach(bufnr) -- This line will add all the default mappings
 
       -- mark operation
       local mark_move_j = function()
@@ -85,19 +79,8 @@ return {
         api.tree.reload()
       end
 
-      -- Mappings removed via: remove_keymaps OR view.mappings.list..action = ""
-      --
-      -- The dummy set before del is done for safety, in case a default mapping does not exist.
-      --
-      -- You might tidy things by removing these along with their default mapping.
-      vim.keymap.set("n", "O", "", { buffer = bufnr })
-      vim.keymap.del("n", "O", { buffer = bufnr })
-      vim.keymap.set("n", "<2-RightMouse>", "", { buffer = bufnr })
-      vim.keymap.del("n", "<2-RightMouse>", { buffer = bufnr })
-      vim.keymap.set("n", "D", "", { buffer = bufnr })
-      vim.keymap.del("n", "D", { buffer = bufnr })
-      vim.keymap.set("n", "E", "", { buffer = bufnr })
-      vim.keymap.del("n", "E", { buffer = bufnr })
+      -- This line will add all the default mappings
+      api.config.mappings.default_on_attach(bufnr)
 
       -- Mappings migrated from view.mappings.list
       vim.keymap.set("n", "v", api.node.open.vertical, opts("Open: Vertical Split"))
@@ -111,6 +94,16 @@ return {
       vim.keymap.set("n", "dF", mark_remove, opts("Remove File(s)"))
       vim.keymap.set("n", "yy", mark_copy, opts("Copy File(s)"))
       vim.keymap.set("n", "mv", api.marks.bulk.move, opts("Move Bookmarked"))
+
+      -- Might tidy things by removing these along with their default mapping.
+      vim.keymap.set("n", "O", "", { buffer = bufnr })
+      vim.keymap.del("n", "O", { buffer = bufnr })
+      vim.keymap.set("n", "<2-RightMouse>", "", { buffer = bufnr })
+      vim.keymap.del("n", "<2-RightMouse>", { buffer = bufnr })
+      vim.keymap.set("n", "D", "", { buffer = bufnr })
+      vim.keymap.del("n", "D", { buffer = bufnr })
+      vim.keymap.set("n", "E", "", { buffer = bufnr })
+      vim.keymap.del("n", "E", { buffer = bufnr })
 
       -- You will need to insert "your code goes here" for any mappings with a custom action_cb
       vim.keymap.set("n", "A", api.tree.expand_all, opts("Expand All"))
@@ -177,7 +170,7 @@ return {
         dotfiles = false,
         git_clean = false,
         no_buffer = false,
-        custom = {".git", "__pycache__"},
+        custom = { ".git", "__pycache__" },
         exclude = {},
       },
     })
