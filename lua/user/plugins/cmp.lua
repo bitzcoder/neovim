@@ -12,6 +12,7 @@ return {
       dependencies = {
         {
           "L3MON4D3/LuaSnip",
+          version = "*",
           dependencies = {
             "rafamadriz/friendly-snippets",
             config = function()
@@ -24,9 +25,10 @@ return {
             require("luasnip.loaders.from_lua").load({
               paths = vim.fn["stdpath"]("config") .. "/snippets/",
             })
-            require("luasnip").config.set_config({
+            require("luasnip").setup({
               history = true,
               update_events = "TextChanged,TextChangedI",
+              delete_check_events = "TextChanged",
               enable_autosnippets = true,
               store_selection_keys = "<Tab>",
               ext_opts = {
@@ -47,9 +49,10 @@ return {
     local cmp = require("cmp")
     local luasnip = require("luasnip")
 
-    local check_backspace = function()
-      local col = vim.fn.col(".") - 1
-      return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
+    local has_words_before = function()
+      unpack = unpack or table.unpack
+      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
 
     -- 󰃐 󰆩 󰙅 󰛡  󰅲 some other good icons
@@ -106,9 +109,9 @@ return {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
+          elseif luasnip.expand_or_locally_jumpable() then
             luasnip.expand_or_jump()
-          elseif check_backspace() then
+          elseif has_words_before() then
             cmp.complete()
           else
             fallback()
@@ -160,10 +163,6 @@ return {
         end,
       },
       sources = cmp.config.sources({
-        { name = "nvim_lua" },
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-        { name = "buffer" },
         {
           name = "path",
           option = {
@@ -172,6 +171,10 @@ return {
             end,
           },
         },
+        { name = "luasnip" },
+        { name = "nvim_lua" },
+        { name = "nvim_lsp" },
+        { name = "buffer" },
       }),
       confirm_opts = {
         behavior = cmp.ConfirmBehavior.Replace,
